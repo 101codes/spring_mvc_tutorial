@@ -1,0 +1,150 @@
+-- -----------------------------------------------------
+-- Table "MBBS_CATEGORY"
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS "MBBS_CATEGORY" (
+  "category_code" VARCHAR(255) NOT NULL,
+  "category_name" VARCHAR(255) NOT NULL,
+  "category_desc" VARCHAR(255) NULL,
+  PRIMARY KEY ("category_code"))
+;
+
+
+-- -----------------------------------------------------
+-- Table "MBBS_TYPE"
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS "MBBS_TYPE" (
+  "type_code" VARCHAR(255) NOT NULL,
+  "type_name" VARCHAR(255) NOT NULL,
+  "type_desc" VARCHAR(255) NULL,
+  "category_code" VARCHAR(255) NOT NULL
+ ,
+  PRIMARY KEY ("type_code"),
+  CONSTRAINT "fk_MBBS_CATEGORY1"
+    FOREIGN KEY ("category_code")
+    REFERENCES "MBBS_CATEGORY" ("category_code")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)  
+;
+
+CREATE INDEX "fk_MBBS_CATEGORY1_idx" ON "MBBS_TYPE" ("category_code" ASC);
+
+-- -----------------------------------------------------
+-- Table "MBBS_BOARD"
+-- -----------------------------------------------------
+-- CREATE SEQUENCE "MBBS_BOARD"seqB;
+
+CREATE TABLE IF NOT EXISTS "MBBS_BOARD" (
+  "board_id" SERIAL,
+  "type_code" VARCHAR(255) NOT NULL,
+  "board_title" VARCHAR(255) NULL,
+  "board_html" TEXT NULL,
+  "board_view_count" INT NOT NULL DEFAULT 0,
+  "is_displayed" SMALLINT NOT NULL DEFAULT 0,
+  "created_by" VARCHAR(255) NOT NULL,
+  "created_date" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_by" VARCHAR(255) NULL,
+  "updated_date" TIMESTAMP(0) NULL,
+  PRIMARY KEY ("board_id")
+ ,
+  CONSTRAINT "fk_MBBS_BOARD_MBBS_TYPE1"
+    FOREIGN KEY ("type_code")
+    REFERENCES "MBBS_TYPE" ("type_code")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+;
+
+CREATE INDEX "fk_MBBS_BOARD_MBBS_TYPE1_idx" ON "MBBS_BOARD" ("type_code" ASC);
+
+
+-- -----------------------------------------------------
+-- Table "MBBS_BOARD_COMMENT"
+-- -----------------------------------------------------
+-- CREATE SEQUENCE "MBBS_BOARD_COMMENT"seq;
+
+CREATE TABLE IF NOT EXISTS "MBBS_BOARD_COMMENT" (
+  "comment_id" SERIAL,
+  "board_id" INT NOT NULL,
+  "comment_text" TEXT NOT NULL,
+  "created_by_type" SMALLINT NOT NULL ,
+  "created_by" VARCHAR(255) NOT NULL,
+  "created_date" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_by" VARCHAR(255) NULL,
+  "updated_date" TIMESTAMP(0) NULL,
+  PRIMARY KEY ("comment_id")
+ ,
+  CONSTRAINT "fk_MBBS_BOARD_COMMENT_MBBS_BOARD1"
+    FOREIGN KEY ("board_id")
+    REFERENCES "MBBS_BOARD" ("board_id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+;
+
+CREATE INDEX "fk_MBBS_BOARD_COMMENT_MBBS_BOARD1_idx" ON "MBBS_BOARD_COMMENT" ("board_id" ASC);
+
+-- -----------------------------------------------------
+-- Table "MBBS_BOARD_ATTACH"
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS "MBBS_BOARD_ATTACH" (
+  "attach_id" SERIAL,
+  "board_id" INT NOT NULL,
+  "attach_name" VARCHAR(255) NOT NULL,
+  "attach_original_name" VARCHAR(255) NOT NULL,
+  "attach_ext" VARCHAR(255) NULL,
+  "attach_size" BIGINT NOT NULL,
+  "attach_content_type" VARCHAR(255) NOT NULL,
+  "attach_path" VARCHAR(255) NOT NULL,
+  "attach_data" BYTEA NOT NULL,
+  "created_by" VARCHAR(255) NOT NULL,
+  "created_date" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ("attach_id")
+ ,
+  CONSTRAINT "fk_MBBS_BOARD_ATTACH_MBBS_BOARD1"
+    FOREIGN KEY ("board_id")
+    REFERENCES "MBBS_BOARD" ("board_id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+;
+
+CREATE INDEX "fk_MBBS_BOARD_ATTACH_MBBS_BOARD1_idx" ON "MBBS_BOARD_ATTACH" ("board_id" ASC);
+
+
+
+-- -----------------------------------------------------
+-- Table "MBBS_BOARD_FAQ"
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS "MBBS_BOARD_QNA" (
+  "board_id" INT NOT NULL,
+  "customer_name" VARCHAR(255) NOT NULL,
+  "customer_pwd" VARCHAR(255) NOT NULL,
+  PRIMARY KEY ("board_id"),
+  CONSTRAINT "fk_MBBS_BOARD_QNA_MBBS_BOARD1"
+    FOREIGN KEY ("board_id")
+    REFERENCES "MBBS_BOARD" ("board_id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+;
+
+
+-- ===========================
+BBS Category/Type Code 
+- 00: Deposit        <= Category
+    - 0000: Saving Account        <= Type
+    - 0001: Fixed Account
+    - 0002: Installment Account
+- 01: Loan
+    - 0100: Big Loan
+    - 0101: Medium Loan
+    - 0102: Small Loan
+- 02: Card
+    - 0200: MCNC Gold Card
+    - 0201: MCNC Silver Card
+-- ===========================
+
+insert into MBBS_CATEGORY ( category_code, category_name, category_desc ) values ( '00', 'Deposit', 'MCNC Deposit Account' );
+insert into MBBS_CATEGORY ( category_code, category_name, category_desc ) values ( '01', 'Loan', 'MCNC Loan' );
+insert into MBBS_CATEGORY ( category_code, category_name, category_desc ) values ( '02', 'Card', 'MCNC Card' );
+
+insert into MBBS_TYPE ( type_code, type_name, type_desc, category_code ) values ( '0000', 'Saving Account', 'MCNC Saving Account' );
+insert into MBBS_TYPE ( type_code, type_name, type_desc, category_code ) values ( '0001', 'Fixed Account', 'MCNC Fixed Account' );
+insert into MBBS_TYPE ( type_code, type_name, type_desc, category_code ) values ( '0002', 'Installment Account', 'MCNC Installment Account' );
+
