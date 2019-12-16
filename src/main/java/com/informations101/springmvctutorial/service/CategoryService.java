@@ -22,30 +22,32 @@ public class CategoryService implements CategoryDao{
 
 	@Override
 	public List<Category> findAllCategory() {
+		if(categorydaoImpl.findAllCategory().isEmpty()) {
+//			
+		}
 		return categorydaoImpl.findAllCategory();
 	}
 
 	@Override
-	public void insertCategory(Category cat) {
-		this.categorydaoImpl.insertCategory(cat);
+	public void insertCategory(Category category) {
+		this.categorydaoImpl.insertCategory(category);
 	}
 
 	@Override
-	public void updateCategory(Category cat) {
+	public void updateCategory(Category category) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void executeUpdateCategory(Category cat) {
+	public void executeUpdateCategory(Category category) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deleteCategory(Category cat) {
-		// TODO Auto-generated method stub
-		
+	public void deleteCategory(Category category) {
+		categorydaoImpl.deleteCategory(category);
 	}
 
 }

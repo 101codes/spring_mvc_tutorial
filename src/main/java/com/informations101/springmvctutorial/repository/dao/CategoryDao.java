@@ -8,11 +8,11 @@ public interface CategoryDao {
 
 	List<Category> findAllCategory();
 
-	void insertCategory(Category cat);
+	void insertCategory(Category category);
 
-	void updateCategory(Category cat);
+	void updateCategory(Category category);
 
-	void executeUpdateCategory(Category cat);
+	void executeUpdateCategory(Category category);
 
-	void deleteCategory(Category cat);
+	void deleteCategory(Category category);
 }

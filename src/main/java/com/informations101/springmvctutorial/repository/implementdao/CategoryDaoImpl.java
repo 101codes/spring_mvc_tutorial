@@ -1,7 +1,13 @@
 package com.informations101.springmvctutorial.repository.implementdao;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -28,31 +34,41 @@ public class CategoryDaoImpl implements CategoryDao {
 	}
 
 	@Override
-	public void insertCategory(Category cat) {
+	public void insertCategory(Category category) {
 		final String sql = "INSERT INTO  \"MBBS_CATEGORY\" (category_code, category_name, category_desc) VALUES(:categoryCode, :categoryName, :categoryDesc);";
 		KeyHolder holder = new GeneratedKeyHolder();
         SqlParameterSource param = new MapSqlParameterSource()
-			.addValue("categoryCode", cat.getCategoryCode())
-			.addValue("categoryName", cat.getCategoryName())
-			.addValue("categoryDesc", cat.getCategoryDesc());
+			.addValue("categoryCode", category.getCategoryCode())
+			.addValue("categoryName", category.getCategoryName())
+			.addValue("categoryDesc", category.getCategoryDesc());
         template.update(sql,param, holder);
 	}
 
 	@Override
-	public void updateCategory(Category cat) {
+	public void updateCategory(Category category) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void executeUpdateCategory(Category cat) {
+	public void executeUpdateCategory(Category category) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void deleteCategory(Category cat) {
-		// TODO Auto-generated method stub
+	public void deleteCategory(Category category) {
+		final String sql= "DELETE FROM \"MBBS_CATEGORY\" WHERE category_code = :cateogryCode";
+
+		 Map<String,Object> map=new HashMap<String,Object>();  
+		 map.put("cateogryCode", category.getCategoryCode());
+		 template.execute(sql,map,new PreparedStatementCallback<Object>() {  
+		    @Override  
+		    public Object doInPreparedStatement(PreparedStatement ps)  
+		            throws SQLException, DataAccessException {  
+		        return ps.executeUpdate();  
+		    }  
+		});
 
 	}
 
